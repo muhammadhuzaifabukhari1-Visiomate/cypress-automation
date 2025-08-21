@@ -37,6 +37,6 @@ pipeline {
             archiveArtifacts artifacts: 'cypress/screenshots/**/*.png', followSymlinks: false
         }
     }
-}
+
 
 
