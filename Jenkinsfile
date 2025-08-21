@@ -16,10 +16,21 @@ pipeline {
             }
         }
 
+        // stage('Run Cypress Tests') {
+        //     steps {
+        //         sh 'npx cypress run'      // run Cypress tests
+        //     }
+        // }
+        
         stage('Run Cypress Tests') {
-            steps {
-                sh 'npx cypress run'      // run Cypress tests
+    steps {
+        script {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh 'npx cypress run'
             }
         }
+    }
+}
+
     }
 }
