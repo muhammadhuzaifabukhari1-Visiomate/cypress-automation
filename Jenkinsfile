@@ -16,40 +16,38 @@ pipeline {
             }
         }
 
-        // stage('Run Cypress Tests') {
-        //     steps {
-        //         sh 'npx cypress run'      // run Cypress tests
-        //     }
-        // }
-
         stage('Run Cypress Tests') {
-    steps {
-        script {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                sh 'npx cypress run'
+            steps {
+                script {
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                        sh 'npx cypress run'
+                    }
+                }
+            }
+        }
+
+        stage('Publish Reports') {
+            steps {
+                publishHTML([allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'cypress/reports',
+                    reportFiles: 'mochawesome.html',
+                    reportName: 'Cypress Test Report'])
             }
         }
     }
-}
-post {
-    always {
-        archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
-        archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
+        }
+        failure {
+            echo "Build failed! Check reports and artifacts."
+        }
+        success {
+            echo "Build passed! 🎉"
+        }
     }
-}
-
-
-stage('Publish Reports') {
-    steps {
-        publishHTML([allowMissing: false,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'cypress/reports',
-            reportFiles: 'mochawesome.html',
-            reportName: 'Cypress Test Report'])
-    }
-
-    }
- }
-
 }
