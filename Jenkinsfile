@@ -21,7 +21,7 @@ pipeline {
         //         sh 'npx cypress run'      // run Cypress tests
         //     }
         // }
-        
+
         stage('Run Cypress Tests') {
     steps {
         script {
@@ -31,6 +31,25 @@ pipeline {
         }
     }
 }
+post {
+    always {
+        archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
+    }
+}
+
+
+stage('Publish Reports') {
+    steps {
+        publishHTML([allowMissing: false,
+            alwaysLinkToLastBuild: true,
+            keepAll: true,
+            reportDir: 'cypress/reports',
+            reportFiles: 'mochawesome.html',
+            reportName: 'Cypress Test Report'])
+    }
 
     }
+ }
+
 }
