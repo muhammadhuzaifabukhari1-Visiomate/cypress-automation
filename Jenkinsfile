@@ -11,13 +11,14 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'npm install'          // install node packages
+                sh 'npx cypress install'  // download Cypress binary
             }
         }
 
         stage('Run Cypress Tests') {
             steps {
-                sh 'npx cypress run'
+                sh 'npx cypress run'      // run Cypress tests
             }
         }
     }
