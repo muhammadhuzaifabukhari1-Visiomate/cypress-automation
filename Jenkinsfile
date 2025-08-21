@@ -26,28 +26,7 @@ pipeline {
             }
         }
 
-        stage('Publish Reports') {
-            steps {
-                publishHTML([allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'cypress/reports',
-                    reportFiles: 'mochawesome.html',
-                    reportName: 'Cypress Test Report'])
-            }
-        }
+        
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: 'cypress/screenshots/**', allowEmptyArchive: true
-            archiveArtifacts artifacts: 'cypress/videos/**', allowEmptyArchive: true
-        }
-        failure {
-            echo "Build failed! Check reports and artifacts."
-        }
-        success {
-            echo "Build passed! 🎉"
-        }
-    }
 }
